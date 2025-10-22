@@ -6,14 +6,14 @@
     <title>Chat</title>
     <style>
       :root {
-        color-scheme: light dark;
-        --chat-accent: #e11d48;
+        color-scheme: light;
+        --chat-accent: #0a1f44;
         --chat-bg: #ffffff;
-        --chat-bg-muted: #fff1f2;
-        --chat-border: #fed7e2;
-        --chat-text: #1f2937;
-        --chat-text-light: #6b7280;
-        --chat-error: #dc2626;
+        --chat-bg-muted: #f3f5f9;
+        --chat-border: #d9dfe9;
+        --chat-text: #0a1f44;
+        --chat-text-light: #4b5563;
+        --chat-error: #b91c1c;
         --chat-font: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
           sans-serif;
       }
@@ -26,8 +26,9 @@
       body {
         margin: 0;
         padding: 0;
+        width: 100%;
         height: 100%;
-        background: linear-gradient(180deg, #fff7fb 0%, #ffffff 38%, #fff1f4 100%);
+        background: transparent;
         font-family: var(--chat-font);
         color: var(--chat-text);
         -webkit-font-smoothing: antialiased;
@@ -42,34 +43,30 @@
       }
 
       .chat-shell {
-        width: min(380px, 100vw);
-        height: min(520px, 96vh);
+        width: 100%;
+        height: 100%;
         display: flex;
         flex-direction: column;
-        border-radius: 18px;
+        border-radius: 15px;
         overflow: hidden;
-        box-shadow: 0 18px 44px rgba(225, 29, 72, 0.24);
-        border: 1px solid rgba(225, 29, 72, 0.18);
+        box-shadow: none;
         background: var(--chat-bg);
       }
 
       @media (max-width: 480px) {
         .chat-shell {
-          width: min(96vw, 420px);
-          height: min(70vh, 520px);
-          border-radius: 16px;
+          border-radius: 15px;
         }
       }
 
       .chat-header {
         background: var(--chat-accent);
         color: #ffffff;
-        padding: 16px 20px;
+        padding: 14px 20px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 12px;
-        box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.22);
       }
 
       .chat-title {
@@ -85,13 +82,13 @@
       .chat-close {
         appearance: none;
         border: none;
-        background: rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.2);
         color: inherit;
-        border-radius: 999px;
-        padding: 4px 8px;
+        border-radius: 8px;
+        padding: 6px 12px;
         cursor: pointer;
         font-size: 13px;
-        font-weight: 500;
+        font-weight: 600;
         transition: background 0.2s ease;
       }
 
@@ -115,7 +112,7 @@
         display: flex;
         flex-direction: column;
         gap: 12px;
-        background: linear-gradient(180deg, #ffffff 0%, #fff7fb 52%, #fff1f2 100%);
+        background: var(--chat-bg);
       }
 
       .message {
@@ -134,7 +131,7 @@
       .message[data-role="assistant"] .bubble {
         background: var(--chat-bg-muted);
         color: var(--chat-text);
-        border: 1px solid rgba(225, 29, 72, 0.08);
+        border: 1px solid rgba(10, 31, 68, 0.08);
         align-self: flex-start;
         border-bottom-left-radius: 4px;
       }
@@ -218,12 +215,18 @@
         font-size: 14px;
         line-height: 1.4;
         transition: border 0.2s ease, box-shadow 0.2s ease;
+        background: #ffffff;
+        color: var(--chat-text);
+      }
+
+      .chat-input::placeholder {
+        color: rgba(10, 31, 68, 0.5);
       }
 
       .chat-input:focus-visible {
         outline: none;
         border-color: var(--chat-accent);
-        box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.15);
+        box-shadow: 0 0 0 2px rgba(10, 31, 68, 0.15);
       }
 
       .actions {
@@ -244,12 +247,18 @@
         border: none;
         background: var(--chat-accent);
         color: #ffffff;
-        border-radius: 999px;
-        padding: 10px 16px;
+        border-radius: 10px;
+        padding: 10px 18px;
         font-size: 14px;
         font-weight: 600;
         cursor: pointer;
         transition: opacity 0.2s ease, transform 0.2s ease;
+      }
+
+      .send-button:hover,
+      .send-button:focus-visible {
+        opacity: 0.9;
+        transform: translateY(-1px);
       }
 
       .send-button[disabled] {
@@ -258,18 +267,6 @@
         transform: none;
       }
 
-      .footer {
-        font-size: 11px;
-        color: var(--chat-text-light);
-        text-align: center;
-        padding-bottom: 4px;
-      }
-
-      .footer a {
-        color: inherit;
-        text-decoration: none;
-        font-weight: 500;
-      }
     </style>
   </head>
   <body>
@@ -296,7 +293,6 @@
           </div>
         </form>
       </div>
-      <div class="footer">Powered by MacDonald Automation</div>
     </div>
     <script>
       (function () {
@@ -529,7 +525,7 @@
               const reply =
                 data && typeof data.reply === "string"
                   ? data.reply.trim()
-                  : "I’m not sure how to respond to that.";
+                  : "I’m not sure about that one. Please reach out through the contact form at Tanorama.ca and we’ll help you directly.";
 
               state.messages.push({
                 role: "assistant",
