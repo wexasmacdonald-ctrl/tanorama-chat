@@ -24,8 +24,9 @@
 4. **Set environment variables** (Settings → Environment Variables):
    - `OPENAI_API_KEY` – secret key for OpenAI.
    - `JWT_SECRET` – HS256 secret for short-lived tokens if you enable Authorization.
-   - `ALLOW_ORIGINS` – comma-separated origins allowed to call `/api/chat` and embed `/chat`, e.g.  
-     `https://your-project.vercel.app,https://tanorama.ca,https://www.tanorama.ca`
+  - `ALLOW_ORIGINS` – comma-separated origins allowed to call `/api/chat` and embed `/chat`. Wildcards in the hostname are supported, e.g. `https://*.wixsite.com`. Include every domain that will host the iframe.  
+    Example for Wix:  
+    `https://your-project.vercel.app,https://tanorama.ca,https://www.tanorama.ca,https://editor.wix.com,https://*.wixsite.com`
 5. **Redeploy** to apply env vars.
 6. **Verify health**: `curl https://<project>.vercel.app/api/health` → expect `{ "ok": true, "time": "<ISO>" }`.
 
@@ -49,6 +50,8 @@
 
 ## Wix Embedding
 ### Preferred: Wix Lightbox (iframe)
+Before embedding, make sure the `ALLOW_ORIGINS` env var lists both your published Wix domain (or custom domain) and the Wix editor origin (`https://editor.wix.com`). Wildcards are allowed, so `https://*.wixsite.com` will cover all preview URLs.
+
 1. Create a Wix Lightbox.
 2. Add an **HTML iframe** element with:
    ```html

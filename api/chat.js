@@ -27,11 +27,68 @@ function parseAllowedOrigins() {
     .filter(Boolean);
 }
 
+function normalizeOrigin(value) {
+  if (typeof value !== "string" || !value) {
+    return "";
+  }
+  const trimmed = value.trim().replace(/\/+$/, "");
+  try {
+    const url = new URL(trimmed);
+    const port = url.port ? `:${url.port}` : "";
+    return `${url.protocol}//${url.hostname}${port}`;
+  } catch (_) {
+    return trimmed.toLowerCase();
+  }
+}
+
+function createWildcardRegex(pattern) {
+  const escaped = pattern.replace(/[-/\\^$+?.()|[\]{}]/g, "\\$&");
+  return new RegExp(`^${escaped.replace(/\*/g, ".*")}$`, "i");
+}
+
+function createOriginMatcher(pattern) {
+  if (pattern === "*") {
+    return () => true;
+  }
+
+  if (pattern.includes("*")) {
+    const [schemeRaw, hostPatternWithPath] = pattern.split("://");
+    const scheme = schemeRaw ? schemeRaw.toLowerCase() : "";
+    const hostPattern = (hostPatternWithPath || "").replace(/\/+$/, "");
+    if (!hostPattern) {
+      const regex = createWildcardRegex(pattern.replace(/\/+$/, ""));
+      return (origin) => Boolean(origin) && regex.test(origin);
+    }
+
+    const regex = createWildcardRegex(hostPattern);
+    const expectedProtocol = scheme ? `${scheme}:` : "";
+
+    return (origin) => {
+      if (!origin) {
+        return false;
+      }
+      try {
+        const url = new URL(origin);
+        if (expectedProtocol && url.protocol !== expectedProtocol) {
+          return false;
+        }
+        return regex.test(url.host);
+      } catch (_) {
+        return false;
+      }
+    };
+  }
+
+  const normalized = normalizeOrigin(pattern);
+  return (origin) => normalizeOrigin(origin) === normalized;
+}
+
 const allowedOrigins = parseAllowedOrigins();
+const originMatchers = allowedOrigins.map((pattern) => createOriginMatcher(pattern));
 
 function isOriginAllowed(origin) {
   if (!origin) return true;
-  return allowedOrigins.includes(origin);
+  return originMatchers.some((matcher) => matcher(origin));
 }
 
 function setCorsHeaders(req, res) {
