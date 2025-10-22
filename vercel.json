@@ -9,6 +9,13 @@
     {
       "src": "^/chat/?$",
       "dest": "/api/chat-page"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "^/api/(.*)$",
+      "dest": "/api/$1"
     }
   ]
 }
