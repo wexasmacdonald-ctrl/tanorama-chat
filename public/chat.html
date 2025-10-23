@@ -65,7 +65,7 @@
         padding: 14px 20px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-start;
         gap: 12px;
       }
 
@@ -77,25 +77,6 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-      }
-
-      .chat-close {
-        appearance: none;
-        border: none;
-        background: rgba(255, 255, 255, 0.2);
-        color: inherit;
-        border-radius: 8px;
-        padding: 6px 12px;
-        cursor: pointer;
-        font-size: 13px;
-        font-weight: 600;
-        transition: background 0.2s ease;
-      }
-
-      .chat-close:hover,
-      .chat-close:focus-visible {
-        background: rgba(255, 255, 255, 0.32);
-        outline: none;
       }
 
       .chat-body {
@@ -267,13 +248,30 @@
         transform: none;
       }
 
+      .chat-footer {
+        padding: 6px 14px 12px;
+        font-size: 11px;
+        color: var(--chat-text-light);
+        text-align: left;
+      }
+
+      .chat-footer a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .chat-footer a:hover,
+      .chat-footer a:focus-visible {
+        text-decoration: underline;
+        outline: none;
+      }
+
     </style>
   </head>
   <body>
     <div class="chat-shell" role="dialog" aria-modal="true" aria-label="Chat assistant">
       <header class="chat-header">
         <h1 class="chat-title">Assistant</h1>
-        <button class="chat-close" type="button" aria-label="Close chat">Close</button>
       </header>
       <div class="chat-body">
         <div class="messages" id="messages" aria-live="polite"></div>
@@ -293,6 +291,11 @@
           </div>
         </form>
       </div>
+      <div class="chat-footer">
+        <a href="https://macdonaldautomation.com" target="_blank" rel="noopener noreferrer">
+          Powered by MacDonald AI
+        </a>
+      </div>
     </div>
     <script>
       (function () {
@@ -308,7 +311,6 @@
 
         const chatShell = document.querySelector(".chat-shell");
         const headerTitle = document.querySelector(".chat-title");
-        const closeButton = document.querySelector(".chat-close");
         const form = document.getElementById("chat-form");
         const textarea = document.getElementById("chat-input");
         const messagesEl = document.getElementById("messages");
@@ -428,10 +430,6 @@
         textarea.addEventListener("input", updateTextareaHeight);
         updateTextareaHeight();
 
-        closeButton.addEventListener("click", function () {
-          postCloseMessage("close-button");
-        });
-
         window.addEventListener("keydown", function (event) {
           if (event.key === "Escape") {
             event.stopPropagation();
@@ -525,7 +523,7 @@
               const reply =
                 data && typeof data.reply === "string"
                   ? data.reply.trim()
-                  : "I’m not sure about that one. Please reach out through the contact form at Tanorama.ca and we’ll help you directly.";
+                  : "I’m not sure about that one. Please call 365-994-5394, email corbin@tanorama.ca, or use the contact form at tanorama.ca/bookings and we’ll help you directly.";
 
               state.messages.push({
                 role: "assistant",
