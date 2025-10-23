@@ -216,13 +216,6 @@
         box-shadow: 0 0 0 2px rgba(10, 31, 68, 0.15);
       }
 
-      .actions {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-      }
-
       .error-banner {
         color: var(--chat-error);
         font-size: 13px;
@@ -255,19 +248,29 @@
       }
 
       .chat-footer {
-        padding: 6px 14px 12px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
         font-size: 11px;
         color: var(--chat-text-light);
         text-align: left;
       }
 
-      .chat-footer a {
+      .footer-left {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .footer-left a {
         color: inherit;
         text-decoration: none;
       }
 
-      .chat-footer a:hover,
-      .chat-footer a:focus-visible {
+      .footer-left a:hover,
+      .footer-left a:focus-visible {
         text-decoration: underline;
         outline: none;
       }
@@ -291,16 +294,16 @@
             aria-label="Message the assistant"
             required
           ></textarea>
-          <div class="actions">
-            <div class="error-banner" id="error-banner" role="alert"></div>
+          <div class="chat-footer">
+            <div class="footer-left">
+              <a href="https://macdonaldautomation.com" target="_blank" rel="noopener noreferrer">
+                Powered by MacDonald AI
+              </a>
+              <div class="error-banner" id="error-banner" role="alert"></div>
+            </div>
             <button class="send-button" type="submit">Send</button>
           </div>
         </form>
-      </div>
-      <div class="chat-footer">
-        <a href="https://macdonaldautomation.com" target="_blank" rel="noopener noreferrer">
-          Powered by MacDonald AI
-        </a>
       </div>
     </div>
     <script>
