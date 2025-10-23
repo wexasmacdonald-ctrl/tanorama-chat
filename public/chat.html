@@ -364,7 +364,11 @@
         };
 
         const defaultSalutation = "Ask me anything about our services!";
-        const welcomeMessage = welcome || defaultSalutation;
+        const legacyWelcomeMatch =
+          welcome &&
+          (welcome.toLowerCase() === "hi! how can i help with tanorama today?" ||
+            welcome.toLowerCase() === "hi how can i help with tanorama today");
+        const welcomeMessage = !welcome || legacyWelcomeMatch ? defaultSalutation : welcome;
 
         if (welcomeMessage) {
           state.messages.push({
