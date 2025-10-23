@@ -7,13 +7,13 @@
     <style>
       :root {
         color-scheme: light;
-        --chat-accent: #0a1f44;
+        --chat-accent: #000000;
         --chat-bg: #ffffff;
-        --chat-bg-muted: #f3f5f9;
-        --chat-border: #d9dfe9;
-        --chat-text: #0a1f44;
-        --chat-text-light: #4b5563;
-        --chat-error: #b91c1c;
+        --chat-bg-muted: #ffffff;
+        --chat-border: #000000;
+        --chat-text: #000000;
+        --chat-text-light: #000000;
+        --chat-error: #000000;
         --chat-font: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
           sans-serif;
       }
@@ -60,7 +60,7 @@
       }
 
       .chat-header {
-        background: var(--chat-accent);
+        background: #000000;
         color: #ffffff;
         padding: 14px 20px;
         display: flex;
@@ -71,7 +71,7 @@
 
       .chat-title {
         font-size: 17px;
-        font-weight: 700;
+        font-weight: 400;
         margin: 0;
         max-width: 85%;
         white-space: nowrap;
@@ -114,7 +114,7 @@
       .message[data-role="assistant"] .bubble {
         background: var(--chat-bg-muted);
         color: var(--chat-text);
-        border: 1px solid rgba(10, 31, 68, 0.08);
+        border: 1px solid var(--chat-border);
         align-self: flex-start;
         border-bottom-left-radius: 4px;
       }
@@ -161,7 +161,7 @@
         display: block;
         max-width: 100%;
         border-radius: 10px;
-        box-shadow: 0 6px 16px rgba(10, 31, 68, 0.18);
+        box-shadow: none;
       }
 
       .status {
@@ -266,7 +266,7 @@
       .send-button:hover,
       .send-button:focus-visible {
         opacity: 0.9;
-        transform: translateY(-1px);
+        transform: none;
       }
 
       .send-button[disabled] {
@@ -342,7 +342,6 @@
 
         const siteId = (params.get("siteId") || "tanorama").trim() || "tanorama";
         const title = params.get("title") ? params.get("title").trim() : "";
-        const accent = params.get("accent") ? params.get("accent").trim() : "";
         const welcome = params.get("welcome") ? params.get("welcome").trim() : "";
         const token = params.get("token") ? params.get("token").trim() : null;
 
@@ -354,11 +353,7 @@
         const errorBanner = document.getElementById("error-banner");
         const sendButton = form.querySelector(".send-button");
 
-        const defaultAccent = getComputedStyle(document.documentElement)
-          .getPropertyValue("--chat-accent")
-          .trim();
-        const accentRegex = /^#([0-9a-fA-F]{6})$/;
-        const appliedAccent = accentRegex.test(accent) ? accent : defaultAccent;
+        const appliedAccent = "#000000";
         document.documentElement.style.setProperty("--chat-accent", appliedAccent);
 
         const fallbackTitle =
@@ -378,10 +373,13 @@
           typing: false,
         };
 
-        if (welcome) {
+        const defaultSalutation = "Ask me anything about our services!";
+        const welcomeMessage = welcome || defaultSalutation;
+
+        if (welcomeMessage) {
           state.messages.push({
             role: "assistant",
-            content: welcome,
+            content: welcomeMessage,
             id: "welcome",
           });
         }
