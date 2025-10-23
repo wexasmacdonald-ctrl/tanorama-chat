@@ -153,25 +153,6 @@
         margin-bottom: 0;
       }
 
-      .bubble figure {
-        margin: 8px 0 0;
-      }
-
-      .bubble figure:first-child {
-        margin-top: 0;
-      }
-
-      .bubble figure:last-child {
-        margin-bottom: 0;
-      }
-
-      .bubble img {
-        display: block;
-        max-width: 100%;
-        border-radius: 10px;
-        box-shadow: none;
-      }
-
       .status {
         font-size: 12px;
         color: var(--chat-text-light);
@@ -396,7 +377,6 @@
           messagesEl.scrollTop = messagesEl.scrollHeight;
         }
 
-        const ALLOWED_IMAGE_HOSTS = new Set(["static.wixstatic.com"]);
         const ALLOWED_LINK_HOSTS = new Set(["tanorama.ca", "www.tanorama.ca", "calendly.com"]);
 
         function isAllowedHost(url, allowedHosts) {
@@ -447,19 +427,6 @@
           for (const block of blocks) {
             const trimmed = block.trim();
             if (!trimmed) {
-              continue;
-            }
-
-            const imageMatch = trimmed.match(/^!\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)$/);
-            if (imageMatch && isAllowedHost(imageMatch[2], ALLOWED_IMAGE_HOSTS)) {
-              const figure = document.createElement("figure");
-              figure.className = "chat-image";
-              const img = document.createElement("img");
-              img.src = imageMatch[2];
-              img.alt = imageMatch[1] || "";
-              img.loading = "lazy";
-              figure.appendChild(img);
-              fragment.appendChild(figure);
               continue;
             }
 
