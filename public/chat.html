@@ -345,11 +345,14 @@
         const appliedAccent = "#000000";
         document.documentElement.style.setProperty("--chat-accent", appliedAccent);
 
+        const lowerSiteId = siteId.toLowerCase();
         const fallbackTitle =
-          siteId.toLowerCase() === "tanorama"
-            ? "Tanorama Assistant"
+          lowerSiteId === "tanorama"
+            ? "Ask me anything about our services!"
             : upperFirst(siteId.replace(/[-_]/g, " "));
-        headerTitle.textContent = title || fallbackTitle;
+
+        headerTitle.textContent =
+          lowerSiteId === "tanorama" ? fallbackTitle : title || fallbackTitle;
 
         const sessionId =
           (typeof crypto !== "undefined" && crypto.randomUUID
