@@ -42,29 +42,27 @@
         justify-content: center;
       }
 
+      .chat-frame {
+        width: 100%;
+        height: 100%;
+        border: 3px solid #000000;
+        border-radius: 15px;
+        overflow: hidden;
+        display: flex;
+      }
+
       .chat-shell {
         width: 100%;
         height: 100%;
         display: flex;
         flex-direction: column;
-        border-radius: 15px;
-        position: relative;
+        border-radius: 0;
         overflow: hidden;
         background: var(--chat-bg);
       }
 
-      .chat-shell::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border-radius: 15px;
-        border: 3px solid #000000;
-        pointer-events: none;
-        box-sizing: border-box;
-      }
-
       @media (max-width: 480px) {
-        .chat-shell {
+        .chat-frame {
           border-radius: 15px;
         }
       }
@@ -316,32 +314,34 @@
     </style>
   </head>
   <body>
-    <div class="chat-shell" role="dialog" aria-modal="true" aria-label="Chat assistant">
-      <header class="chat-header">
-        <h1 class="chat-title">Assistant</h1>
-      </header>
-      <div class="chat-body">
-        <div class="messages" id="messages" aria-live="polite"></div>
-        <form class="chat-form" id="chat-form">
-          <textarea
-            id="chat-input"
-            class="chat-input"
-            name="message"
-            placeholder="Type a message..."
-            rows="2"
-            aria-label="Message the assistant"
-            required
-          ></textarea>
-          <div class="chat-footer">
-            <div class="footer-left">
-              <a href="https://macdonaldautomation.com" target="_blank" rel="noopener noreferrer">
-                Powered by MacDonald AI
-              </a>
-              <div class="error-banner" id="error-banner" role="alert"></div>
+    <div class="chat-frame">
+      <div class="chat-shell" role="dialog" aria-modal="true" aria-label="Chat assistant">
+        <header class="chat-header">
+          <h1 class="chat-title">Assistant</h1>
+        </header>
+        <div class="chat-body">
+          <div class="messages" id="messages" aria-live="polite"></div>
+          <form class="chat-form" id="chat-form">
+            <textarea
+              id="chat-input"
+              class="chat-input"
+              name="message"
+              placeholder="Type a message..."
+              rows="2"
+              aria-label="Message the assistant"
+              required
+            ></textarea>
+            <div class="chat-footer">
+              <div class="footer-left">
+                <a href="https://macdonaldautomation.com" target="_blank" rel="noopener noreferrer">
+                  Powered by MacDonald AI
+                </a>
+                <div class="error-banner" id="error-banner" role="alert"></div>
+              </div>
+              <button class="send-button" type="submit">Send</button>
             </div>
-            <button class="send-button" type="submit">Send</button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
     <script>
