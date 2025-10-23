@@ -50,6 +50,23 @@
         border-radius: 15px;
         overflow: hidden;
         background: var(--chat-bg);
+        position: relative;
+      }
+
+      .chat-shell::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        border: 3px solid #000000;
+        pointer-events: none;
+        box-sizing: border-box;
+        z-index: 2;
+      }
+
+      .chat-shell > * {
+        position: relative;
+        z-index: 3;
       }
 
       .chat-header {
