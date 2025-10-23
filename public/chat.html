@@ -50,23 +50,6 @@
         border-radius: 15px;
         overflow: hidden;
         background: var(--chat-bg);
-        position: relative;
-      }
-
-      .chat-shell::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        border: 3px solid #000000;
-        pointer-events: none;
-        box-sizing: border-box;
-        z-index: 2;
-      }
-
-      .chat-shell > * {
-        position: relative;
-        z-index: 3;
       }
 
       .chat-header {
@@ -96,6 +79,21 @@
         min-height: 0;
         padding-bottom: 48px;
         position: relative;
+      }
+
+      .chat-body::before {
+        content: "";
+        position: absolute;
+        top: -3px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border: 3px solid #000000;
+        border-top: 0;
+        border-radius: 0 0 12px 12px;
+        pointer-events: none;
+        box-sizing: border-box;
+        z-index: 1;
       }
 
       .messages {
