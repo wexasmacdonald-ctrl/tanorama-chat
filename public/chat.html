@@ -136,6 +136,34 @@
         font-size: 14px;
       }
 
+      .bubble p {
+        margin: 0 0 8px;
+        white-space: normal;
+      }
+
+      .bubble p:last-child {
+        margin-bottom: 0;
+      }
+
+      .bubble figure {
+        margin: 8px 0 0;
+      }
+
+      .bubble figure:first-child {
+        margin-top: 0;
+      }
+
+      .bubble figure:last-child {
+        margin-bottom: 0;
+      }
+
+      .bubble img {
+        display: block;
+        max-width: 100%;
+        border-radius: 10px;
+        box-shadow: 0 6px 16px rgba(10, 31, 68, 0.18);
+      }
+
       .status {
         font-size: 12px;
         color: var(--chat-text-light);
@@ -362,6 +390,91 @@
           messagesEl.scrollTop = messagesEl.scrollHeight;
         }
 
+        const ALLOWED_IMAGE_HOSTS = new Set(["static.wixstatic.com"]);
+        const ALLOWED_LINK_HOSTS = new Set(["tanorama.ca", "www.tanorama.ca", "calendly.com"]);
+
+        function isAllowedHost(url, allowedHosts) {
+          try {
+            const parsed = new URL(url);
+            return allowedHosts.has(parsed.hostname);
+          } catch (_) {
+            return false;
+          }
+        }
+
+        function appendInlineContent(container, text) {
+          const linkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+          let lastIndex = 0;
+          let match;
+          while ((match = linkRegex.exec(text))) {
+            const preceding = text.slice(lastIndex, match.index);
+            if (preceding) {
+              container.appendChild(document.createTextNode(preceding));
+            }
+
+            const label = match[1];
+            const href = match[2];
+            if (isAllowedHost(href, ALLOWED_LINK_HOSTS)) {
+              const anchor = document.createElement("a");
+              anchor.href = href;
+              anchor.textContent = label;
+              anchor.target = "_blank";
+              anchor.rel = "noopener noreferrer";
+              container.appendChild(anchor);
+            } else {
+              container.appendChild(document.createTextNode(match[0]));
+            }
+            lastIndex = match.index + match[0].length;
+          }
+
+          const trailing = text.slice(lastIndex);
+          if (trailing) {
+            container.appendChild(document.createTextNode(trailing));
+          }
+        }
+
+        function renderMessageContent(rawContent) {
+          const content = typeof rawContent === "string" ? rawContent : "";
+          const fragment = document.createDocumentFragment();
+          const blocks = content.split(/\n{2,}/);
+
+          for (const block of blocks) {
+            const trimmed = block.trim();
+            if (!trimmed) {
+              continue;
+            }
+
+            const imageMatch = trimmed.match(/^!\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)$/);
+            if (imageMatch && isAllowedHost(imageMatch[2], ALLOWED_IMAGE_HOSTS)) {
+              const figure = document.createElement("figure");
+              figure.className = "chat-image";
+              const img = document.createElement("img");
+              img.src = imageMatch[2];
+              img.alt = imageMatch[1] || "";
+              img.loading = "lazy";
+              figure.appendChild(img);
+              fragment.appendChild(figure);
+              continue;
+            }
+
+            const paragraph = document.createElement("p");
+            const lines = block.split("\n");
+            lines.forEach((line, index) => {
+              appendInlineContent(paragraph, line);
+              if (index < lines.length - 1) {
+                paragraph.appendChild(document.createElement("br"));
+              }
+            });
+            fragment.appendChild(paragraph);
+          }
+
+          if (!fragment.childNodes.length) {
+            fragment.appendChild(document.createTextNode(content));
+          }
+
+          return fragment;
+        }
+
         function createMessageElement(message) {
           const wrapper = document.createElement("div");
           wrapper.className = "message";
@@ -369,7 +482,7 @@
 
           const bubble = document.createElement("div");
           bubble.className = "bubble";
-          bubble.textContent = message.content;
+          bubble.appendChild(renderMessageContent(message.content));
           wrapper.appendChild(bubble);
           return wrapper;
         }
